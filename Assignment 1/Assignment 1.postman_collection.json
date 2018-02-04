@@ -1,0 +1,128 @@
+{
+	"info": {
+		"name": "Assignment 1",
+		"_postman_id": "2c5b06f2-6043-be74-317a-69801e7a94cf",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Books",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "203fa821-7088-4ead-a38e-c3976908892f",
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"book_title\", \"Turing\");"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "e7972b50-9953-4e32-b5bd-f7f6e1ea1639",
+						"type": "text/javascript",
+						"exec": [
+							"tests['Status: 200 OK'] = (responseCode.code === 200);",
+							"",
+							"var data = JSON.parse(responseBody);",
+							"",
+							"tests['Turing in Title'] = data.items[8].volumeInfo.title.has(\"Turing\");",
+							"",
+							"var id = data.items[8].id;",
+							"",
+							"postman.setEnvironmentVariable(\"id\", id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://www.googleapis.com/books/v1/volumes?q={{book_title}};",
+					"protocol": "https",
+					"host": [
+						"www",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"books",
+						"v1",
+						"volumes"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{book_title}};",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Volume",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "309c17e5-0322-4900-a02c-9f212bfbacbe",
+						"type": "text/javascript",
+						"exec": [
+							"tests['Status: 200 OK'] = (responseCode.code === 200);",
+							"var data = JSON.parse(responseBody);",
+							"var id = pm.environment.get(\"id\");",
+							"var otherId = data.items[0].id;",
+							"tests['id'] = (id == otherId);"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9c4516f7-bdd3-498e-8214-1ea0b837a705",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://www.googleapis.com/books/v1/volumes?q={{id}}",
+					"protocol": "https",
+					"host": [
+						"www",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"books",
+						"v1",
+						"volumes"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{id}}",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
